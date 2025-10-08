@@ -3,17 +3,14 @@ import {
   Text,
   ActivityIndicator,
   ScrollView,
-  Image,
   FlatList,
+  Button,
 } from "react-native";
 import { useRouter } from "expo-router";
 
 import useFetch from "@/services/usefetch";
 import { fetchMovies } from "@/services/api";
 import { getTrendingMovies } from "@/services/appwrite";
-
-import { icons } from "@/constants/icons";
-import { images } from "@/constants/images";
 
 import SearchBar from "@/components/SearchBar";
 import MovieCard from "@/components/MovieCard";
@@ -35,30 +32,23 @@ const Index = () => {
   } = useFetch(() => fetchMovies({ query: "" }));
 
   return (
-    <View className="flex-1 bg-primary">
-      <Image
-        source={images.bg}
-        className="absolute w-full z-0"
-        resizeMode="cover"
-      />
-
+    <View style={{ flex: 1, backgroundColor: "#fff", paddingHorizontal: 16 }}>
       <ScrollView
-        className="flex-1 px-5"
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={{ minHeight: "100%", paddingBottom: 10 }}
+        contentContainerStyle={{ paddingVertical: 20 }}
       >
-        <Image source={icons.logo} className="w-12 h-10 mt-20 mb-5 mx-auto" />
+        <Text style={{ fontSize: 24, fontWeight: "bold", textAlign: "center", marginBottom: 20 }}>
+          Movie App
+        </Text>
 
         {moviesLoading || trendingLoading ? (
-          <ActivityIndicator
-            size="large"
-            color="#0000ff"
-            className="mt-10 self-center"
-          />
+          <ActivityIndicator size="large" color="#0000ff" style={{ marginTop: 20 }} />
         ) : moviesError || trendingError ? (
-          <Text>Error: {moviesError?.message || trendingError?.message}</Text>
+          <Text style={{ color: "red", marginTop: 10 }}>
+            Error: {moviesError?.message || trendingError?.message}
+          </Text>
         ) : (
-          <View className="flex-1 mt-5">
+          <View style={{ marginTop: 20 }}>
             <SearchBar
               onPress={() => {
                 router.push("/search");
@@ -67,29 +57,24 @@ const Index = () => {
             />
 
             {trendingMovies && (
-              <View className="mt-10">
-                <Text className="text-lg text-white font-bold mb-3">
+              <View style={{ marginTop: 30 }}>
+                <Text style={{ fontSize: 18, fontWeight: "600", marginBottom: 10 }}>
                   Trending Movies
                 </Text>
                 <FlatList
                   horizontal
                   showsHorizontalScrollIndicator={false}
-                  className="mb-4 mt-3"
                   data={trendingMovies}
-                  contentContainerStyle={{
-                    gap: 26,
-                  }}
                   renderItem={({ item, index }) => (
                     <TrendingCard movie={item} index={index} />
                   )}
                   keyExtractor={(item) => item.movie_id.toString()}
-                  ItemSeparatorComponent={() => <View className="w-4" />}
                 />
               </View>
             )}
 
-            <>
-              <Text className="text-lg text-white font-bold mt-5 mb-3">
+            <View style={{ marginTop: 30 }}>
+              <Text style={{ fontSize: 18, fontWeight: "600", marginBottom: 10 }}>
                 Latest Movies
               </Text>
 
@@ -98,16 +83,9 @@ const Index = () => {
                 renderItem={({ item }) => <MovieCard {...item} />}
                 keyExtractor={(item) => item.id.toString()}
                 numColumns={3}
-                columnWrapperStyle={{
-                  justifyContent: "flex-start",
-                  gap: 20,
-                  paddingRight: 5,
-                  marginBottom: 10,
-                }}
-                className="mt-2 pb-32"
                 scrollEnabled={false}
               />
-            </>
+            </View>
           </View>
         )}
       </ScrollView>

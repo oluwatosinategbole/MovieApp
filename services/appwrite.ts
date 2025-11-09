@@ -57,9 +57,8 @@ export const getTrendingMovies = async (): Promise<
   }
 };
 
-export const signUpWithEmail = async (email: string, password: string) => {
-  // Create user and log them in
-  await account.create(ID.unique(), email, password);
+export const signUpWithEmail = async (name: string, email: string, password: string) => {
+  await account.create(ID.unique(), email, password, name);
   return account.createEmailPasswordSession(email, password);
 };
 

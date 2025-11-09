@@ -56,3 +56,26 @@ export const getTrendingMovies = async (): Promise<
     return undefined;
   }
 };
+
+export const signUpWithEmail = async (email: string, password: string) => {
+  // Create user and log them in
+  await account.create(ID.unique(), email, password);
+  return account.createEmailPasswordSession(email, password);
+};
+
+export const signInWithEmail = async (email: string, password: string) => {
+  return account.createEmailPasswordSession(email, password);
+};
+
+export const getCurrentUser = async () => {
+  try {
+    return await account.get();
+  } catch (error) {
+    // No active session
+    return null;
+  }
+};
+
+export const signOut = async () => {
+  await account.deleteSessions();
+};
